@@ -79,7 +79,25 @@ title('1');
 xlabel('2');
 ylabel('3'); 
 grid on;
- 
+d(50, :)
+[pks, locs] = findpeaks(d(50, :)); 
+%pks
+min (fs./diff(locs)), mean(fs./diff(locs)), max(fs./diff(locs)); 
 
+
+[mm, peak1_ind] = min ((fs./diff(locs))); 
+%pitch_Hz = zeros(1, length(locs));
+%for r = 1:length(locs)
+    %period=locs(peak1_ind + 1 + r)-locs(peak1_ind + r); %comparing the "time" between peaks 
+    %pitch_Hz(r) = fs/period;
+%end
+period=locs(peak1_ind+1)-locs(peak1_ind); %comparing the "time" between peaks 
+%pitch_Hz = fs/period; 
+
+%disp(pitch_Hz)
+min (fs./diff(locs));
+min (fs./diff(locs));
+figure(4);
+plot(pks);
 
 
