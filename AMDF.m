@@ -21,6 +21,12 @@
  
 %sum = zeros(1, N); 
 
+sum = zeros(1, N); 
+%sum;
+for k=N 
+    sum(k)=0;
+end 
+
 for k=320 
 
     sum(k)=0 
