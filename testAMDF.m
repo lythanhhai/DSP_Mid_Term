@@ -1,6 +1,6 @@
  close all;clear;clc
  % input audio
- [x,fs]=audioread('16khz.wav'); 
+ [x,fs]=audioread('phone_male.wav'); 
  
  % vẽ signal by sample
  figure(1);
@@ -19,27 +19,6 @@
  ylabel('amplitude');
  %pause;
  
- % phân frame cho tín hiệu
- K = length(x); % độ dài signal
- L = K/fs; % thời gian của signal tính bằng s
- numberFrames = round(L * 1000 / 100); % số khung, 1 khung khoảng 30ms.(267 khung)
- q=round(K / numberFrames); % số sample trong mỗi khung , chia 267 khung
- P=zeros(numberFrames, q); % 
- for i = 1:numberFrames
-     startIndex = (i - 1) * q + 1;
-     for j = 1:q
-         P(i, j) = x(startIndex + j - 1);
-     end
- end
- figure(3);
- plot(P(1, :));
- 
-%windowsize = fs/160;
-%trailingsamples = mod(length(x), windowsize);
-%sampleframes = reshape( x(1:end-trailingsamples), windowsize, []);
-%figure(15);
-%plot(sampleframes);
- 
  a = x(1000:2000);
  figure(4);
  subplot(2,1,1);
@@ -50,24 +29,16 @@
  grid on;
  %pause;
 
-N = round(K / numberFrames);% frame lenght
-%N = 1000;
-%n = 10;% độ trễ
 sum1 = 0;
-d = zeros(numberFrames, q);
-%T0_min=fs/400;
-%T0_max=fs/80;
-%d = zeros(1, length(V));
-for l=1:numberFrames
-    for k=1:q  
-            for m = 1:(N - 1 - k)
-                sum1 = sum1 + abs(P(1, m) - P(1, m + k));
+d = zeros(1, 1000);
+
+    for k=1:1000  
+            for m = 1:(1001 - 1 - k)
+                sum1 = sum1 + abs(a(m) - a(m + k));
             end
-            d(l, k) = sum1;
+            d(k) = sum1;
             sum1=0;
     end
-end
-%d
 
 % độ dài khung độ trễ n -> N
 % xét oitch n -> N độ dài khung
@@ -81,8 +52,8 @@ figure(5);
 %subplot(2,1,2);
 %time = (1/fs)*length(d(1, :));
 %t = linspace(0, time, length(d(1, :)));
-plot(d(1, :));
-d
+plot(d);
+%d
 title('1');
 xlabel('2');
 ylabel('3'); 
@@ -92,7 +63,7 @@ grid on;
 
 T0_min=fs/400;
 T0_max=fs/80;
-T = zeros(1, numberFrames);
+T = zeros(1, 1000);
 for nf=1:numberFrames
     [pks, locs] = findpeaks(-d(nf, :));
     %pks
