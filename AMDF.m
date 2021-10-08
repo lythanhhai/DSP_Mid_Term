@@ -1,18 +1,25 @@
  close all;clear;clc
  % input audio
  [x,fs]=audioread('studio_male.wav'); 
- 
+ figure(20);
  % vẽ signal by sample
+ subplot(4,2,1);
+ plot(x);
+ title('signal speech');
+ xlabel('sample number');
+ ylabel('amplitude');
+ grid on;
  % vẽ signal by time
  time = (1/fs)*length(x);
  t = linspace(0, time, length(x));
- figure(2);
+ subplot(4,2,2);
  plot(t,x);
+ title('signal by second');
  xlabel('time(sec)');
  ylabel('amplitude');
 
  
- frame_len = 0.1 * fs;% chiều dài khung
+ frame_len = 0.05 * fs;% chiều dài khung, 1 khung 100ms
  R = length(x);
  numberFrames = floor(R / frame_len);
 
@@ -23,8 +30,8 @@
          P(i, j) = x(startIndex + j - 1);
      end
  end
- figure(3);
- plot(P(10, :));
+ subplot(4,2,3);
+ plot(P(16, :));
  
 
 sum1 = 0;
@@ -39,13 +46,8 @@ for l=1:numberFrames
     end
 end
 %d
-figure(10);
-plot(d(10, :));
-
-
-
-T0_min=1/400;
-T0_max=1/80;
+subplot(4,2,4);
+plot(d(16, :));
 
 
 minimum = zeros(numberFrames, frame_len);
@@ -55,7 +57,7 @@ for nf=1:numberFrames
                minimum(nf, r) = d(nf, r);
            end   
     end
-    [pks, locs] = findpeaks(d(10, :));
+    %[pks, locs] = findpeaks(d(10, :));
     %pks
     %locs
     %-d(1, :)
@@ -73,19 +75,27 @@ for nf=1:numberFrames
     %T(nf) = fs/period;
     
 end
-figure(11);
-stem(minimum(10, :));
-max(minimum(10, :))
-fs/max(minimum(8, :))
+subplot(4,2,5);
+stem(minimum(16, :));
+max(minimum(10, :));
+fs/max(minimum(8, :));
 
+
+T0_min=fs/400;
+T0_max=fs/80;
 T = zeros(1,numberFrames);
 a = 0;
+i=1;
 for nf=1:numberFrames
     a = fs/max(minimum(nf, :));
-    if (a > 70 && a < 450)
+    if (a > 80 && a < 400)
         T(nf) = fs/max(minimum(nf, :));
+        res(i) = T(nf);
+        i = i+1;
     end
 end
-figure(6);
+subplot(4,2,6);
+stem(res);
+subplot(4,2,7);
 stem(T);
 
