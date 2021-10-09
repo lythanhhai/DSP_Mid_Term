@@ -103,8 +103,15 @@ for i=1:numberFrames
     end
 end
 subplot(4,2,6);
-plot(Fo, '.');
-
+%plot(Fo, '.');
+k=1;
+for i=1:numberFrames
+    k=k+1;
+    if Fo(i) > 0
+        hold on
+        plot(k-1:k+1, Fo(i), '.' ,'color', 'r');
+    end
+end
 fomean = 0;
 j =0;
 for i=1:numberFrames
