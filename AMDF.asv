@@ -1,6 +1,6 @@
  close all;clear;clc
  % input audio
- [x,fs]=audioread('./fileTinHieuMoi/phone_F1.wav'); 
+ [x,fs]=audioread('./fileTinHieuMoi/studio_F1.wav'); 
  figure(1);
  var=1;% khung thứ 
  % vẽ signal by sample
@@ -95,10 +95,10 @@ stem(t3, minimum(var, :));
 Fo=zeros(numberFrames, 1);
 for i=1:numberFrames
     % 570 studio_male
-    % 130 phone_female
+    % 110 phone_female
     % 400 studio_fe
-    % 170 phone_male
-    if vitri(i) < 130
+    % 170 
+    if vitri(i) < 400
        Fo(i) = 1/(vitri(i) / fs);
     end
 end
