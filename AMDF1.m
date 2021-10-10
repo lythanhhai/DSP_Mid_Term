@@ -1,6 +1,6 @@
  close all;clear;clc
  % input audio
- [x,fs]=audioread('./fileTinHieuMoi/studio_M1.wav'); 
+ [x,fs]=audioread('./fileTinHieuMoi/studio_F1.wav'); 
  figure(1);
  var=32;% khung thứ 
  
@@ -58,14 +58,15 @@ plot(t2, d(var, :));
 normalizedAMDF = d - min(d(:));
 normalizedAMDF = normalizedAMDF ./ max(normalizedAMDF(:));
 
+
 % tìm cực tiểu của khung tín hiệu
 T0_min=fs/450;
 T0_max=fs/70;
 minimum = zeros(numberFrames, frame_len);
 for nf=1:numberFrames
     for r=2:frame_len
-           if (d(nf, r) < d(nf, r-1)) && (d(nf, r) < d(nf, r+1)) && r > T0_min && r < T0_max
-               minimum(nf, r) = d(nf, r);
+           if (normalizedAMDF(nf, r) < normalizedAMDF(nf, r-1)) && (normalizedAMDF(nf, r) < normalizedAMDF(nf, r+1)) && r > T0_min && r < T0_max
+               minimum(nf, r) = normalizedAMDF(nf, r);
            end   
     end
 end
@@ -104,7 +105,7 @@ for i=1:numberFrames
     %if vitri(i) < 540
     % 8.6 male_studi
     % 9 female_studi
-    if minimum1(i) > 8.6
+    if minimum1(i) > 0.1
        Fo(i) = 1/(vitri(i) / fs);
     end
 end
