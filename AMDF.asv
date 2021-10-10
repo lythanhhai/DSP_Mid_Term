@@ -1,6 +1,6 @@
  close all;clear;clc
  % input audio
- [x,fs]=audioread('./fileTinHieuMoi/studio_F1.wav'); 
+ [x,fs]=audioread('./fileTinHieuMoi/phone_F1.wav'); 
  figure(1);
  var=1;% khung thứ 
  % vẽ signal by sample
@@ -19,6 +19,7 @@
  title('signal by second');
  xlabel('time(sec)');
  ylabel('amplitude');
+ 
 
  
  % phân khung cho tín hiệu
@@ -95,15 +96,28 @@ stem(t3, minimum(var, :));
 Fo=zeros(numberFrames, 1);
 for i=1:numberFrames
     % 570 studio_male
-    % 110 phone_female
+    % 130 phone_female
     % 400 studio_fe
-    % 170 
-    if vitri(i) < 400
+    % 170 phone_male
+    if vitri(i) < 130
        Fo(i) = 1/(vitri(i) / fs);
     end
 end
 subplot(4,2,6);
 plot(Fo, '.');
+figure(9);
+plot(Fo, '.');
+k=1;
+figure(10);
+for i=1:numberFrames
+    k=k+1;
+    if Fo(i) > 0
+        hold on
+        
+        plot(k-1:k-1, Fo(i), '.' ,'color', 'r');
+    end
+end
+
 
 fomean = 0;
 j =0;
@@ -113,6 +127,13 @@ for i=1:numberFrames
        j = j + 1;
     end
 end
+phuongsai = 0;
+for i=1:numberFrames
+    if Fo(i) ~= 0
+        phuongsai = phuongsai + pow(, 2);
+    end
+end
 fomean/j
 
-
+figure(15);
+ plot(t,x);

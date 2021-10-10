@@ -19,6 +19,7 @@
  title('signal by second');
  xlabel('time(sec)');
  ylabel('amplitude');
+ 
 
  
  % phân khung cho tín hiệu
@@ -103,15 +104,21 @@ for i=1:numberFrames
     end
 end
 subplot(4,2,6);
-%plot(Fo, '.');
+plot(Fo, '.');
+figure(9);
+plot(Fo, '.');
 k=1;
+figure(10);
 for i=1:numberFrames
     k=k+1;
     if Fo(i) > 0
         hold on
-        plot(k-1:k+1, Fo(i), '.' ,'color', 'r');
+        
+        plot(k-1:k-1, Fo(i), '.' ,'color', 'r');
     end
 end
+
+
 fomean = 0;
 j =0;
 for i=1:numberFrames
@@ -120,6 +127,14 @@ for i=1:numberFrames
        j = j + 1;
     end
 end
+phuongsai = 0;
+for i=1:numberFrames
+    if Fo(i) ~= 0
+        phuongsai = phuongsai + power(Fo(i) - fomean/j, 2);
+    end
+end
 fomean/j
+sqrt(phuongsai / (j-1))
 
-
+figure(15);
+ plot(t,x);
