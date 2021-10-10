@@ -1,27 +1,9 @@
  close all;clear;clc
  % input audio
- [x,fs]=audioread('./fileTinHieuMoi/phone_F1.wav'); 
+ [x,fs]=audioread('./fileTinHieuMoi/studio_M1.wav'); 
  figure(1);
- var=1;% khung thứ 
- % vẽ signal by sample
- subplot(4,2,1);
- plot(x);
- title('signal speech');
- xlabel('sample number');
- ylabel('amplitude');
- grid on;
- 
- % vẽ signal by time
- time = (1/fs)*length(x);
- t = linspace(0, time, length(x));
- subplot(4,2,2);
- plot(t,x);
- title('signal by second');
- xlabel('time(sec)');
- ylabel('amplitude');
- 
+ var=32;% khung thứ 
 
- 
  % phân khung cho tín hiệu
  frame_len = 0.03 * fs;% chiều dài khung, 1 khung 30ms
  R = length(x);
@@ -35,8 +17,6 @@
  end
  time1 = (1/fs)*length(P(var, :));
  t1 = linspace(0, time1, length(P(var, :)));
- subplot(4,2,3);
- plot(t1, P(var, :));
 
 % tính AMDF
 sum1 = 0;
@@ -52,12 +32,13 @@ for l=1:numberFrames
 end
 time2 = (1/fs)*length(d(var, :));
 t2 = linspace(0, time2, length(d(var, :)));
-subplot(4,2,4);
-plot(t2, d(var, :));
+
+normalizedAMDF = d - min(d(:));
+normalizedAMDF = normalizedAMDF ./ max(normalizedAMDF(:));
 
 % tìm cực tiểu của khung tín hiệu
-T0_min=fs/400;
-T0_max=fs/80;
+T0_min=fs/450;
+T0_max=fs/70;
 minimum = zeros(numberFrames, frame_len);
 for nf=1:numberFrames
     for r=2:frame_len
@@ -84,41 +65,42 @@ for e=1:numberFrames
     minimum1(e) = min;
     vitri(e) = vitriMin;
 end
-vitri
+%vitri
+minimum1
 time3 = (1/fs)*length(minimum(var, :));
 t3 = linspace(0, time3, length(minimum(var, :)));
-subplot(4,2,5);
-stem(t3, minimum(var, :));
 
 
-
-
+% so sánh với ngưỡng
 Fo=zeros(numberFrames, 1);
 for i=1:numberFrames
     % 570 studio_male
     % 130 phone_female
     % 400 studio_fe
     % 170 phone_male
-    if vitri(i) < 130
+    %if vitri(i) < 540
+    % 8.6 male_studi
+    % 9 female_studi
+    if minimum1(i) > 8.6
        Fo(i) = 1/(vitri(i) / fs);
     end
 end
-subplot(4,2,6);
-plot(Fo, '.');
-figure(9);
+subplot(4,1,1);
 plot(Fo, '.');
 k=1;
-figure(10);
+%figure(10);
+%subplot(4,1,1);
 for i=1:numberFrames
     k=k+1;
     if Fo(i) > 0
         hold on
         
-        plot(k-1:k-1, Fo(i), '.' ,'color', 'r');
+        %plot(k-1:k-1, Fo(i), '.' ,'color', 'r');
     end
 end
 
 
+% tính trung bình cộng Fo
 fomean = 0;
 j =0;
 for i=1:numberFrames
@@ -127,13 +109,13 @@ for i=1:numberFrames
        j = j + 1;
     end
 end
+% tính độ leehcj chuẩn
 phuongsai = 0;
 for i=1:numberFrames
     if Fo(i) ~= 0
-        phuongsai = phuongsai + pow(, 2);
+        phuongsai = phuongsai + power(Fo(i) - fomean/j, 2);
     end
 end
-fomean/j
-
-figure(15);
- plot(t,x);
+fomean/j % trung bình cộng
+sqrt(phuongsai / (j-1)) % độ lệch chuẩn
+%fs

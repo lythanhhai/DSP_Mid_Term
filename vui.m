@@ -18,3 +18,22 @@ subplot(4,2,6);
 plot(T, '.');
 subplot(4,2,7);
 %plot(res, '.');
+
+
+% 
+
+normalizedAMDF = d - min(d(:));
+normalizedAMDF = normalizedAMDF ./ max(normalizedAMDF(:));
+
+
+% tìm cực tiểu của khung tín hiệu
+T0_min=fs/450;
+T0_max=fs/70;
+minimum = zeros(numberFrames, frame_len);
+for nf=1:numberFrames
+    for r=2:frame_len
+           if (normalizedAMDF(nf, r) < normalizedAMDF(nf, r-1)) && (normalizedAMDF(nf, r) < normalizedAMDF(nf, r+1)) && r > T0_min && r < T0_max
+               minimum(nf, r) = normalizedAMDF(nf, r);
+           end   
+    end
+end
