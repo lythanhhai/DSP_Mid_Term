@@ -63,8 +63,8 @@ plot(t1, normalizedAMDF(frame_unvoice, :));
 title('unvoice');
 
 % tìm cực tiểu của khung tín hiệu
-T0_min=fs/450;
-T0_max=fs/70;
+T0_min=fs/400;
+T0_max=fs/80;
 minimum = zeros(numberFrames, frame_len);
 for nf=1:numberFrames
     for r=2:frame_len
@@ -100,7 +100,7 @@ for i=1:numberFrames
     max1 = max(normalizedAMDF(i, :));
     minimum1(i)/max1;
    % 0.3 phone
-    if minimum1(i) < (max1 * 0.3)
+    if minimum1(i) < (max1 * 0.25)
        Fo(i) = 1/(vitri(i) / fs);
     end
 end
@@ -133,11 +133,11 @@ for i=1:numberFrames
     k=k+1;
     if Fo(i) > 0
         hold on
-        plot(k-1, Fo(i), '.' ,'color', 'b');
+        plot(k-1, Fo(i), '.' ,'color', 'r');
     end
 end
 xlim([0 length(Fo)]);
-title(['Fomean = ', num2str(fo_mean), 'Hz ', ' Fostd = ', num2str(fo_std), 'Hz']);
+title('Fomean:' + fo_mean + ', ' + 'fo_std' + fo_std);
 xlabel('khung');
 ylabel('Fo(hz)');
 
