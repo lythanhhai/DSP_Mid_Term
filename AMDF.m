@@ -1,8 +1,10 @@
  close all;clear;clc
+ % function [Fo] = AMDF(filename)
  % input audio
- [x,fs]=audioread('./fileTinHieuMoi/phone_M1.wav'); 
+ [x,fs]=audioread('./fileTinHieuMoi/phone_F1.wav'); 
+% [x,fs]=audioread(filename); 
  figure(1);
- var=47;% khung thứ 
+ var=105;% khung thứ 
  
  % vẽ signal by sample
  subplot(4,2,1);
@@ -28,9 +30,9 @@
  numberFrames = floor(R / frame_len);% số khung được chia
  P=zeros(numberFrames, frame_len);
  for i = 1:numberFrames
-     startIndex = (i - 1) * frame_len + 1;
+     startIndex = (i - 1) * frame_len;
      for j = 1:frame_len
-         P(i, j) = x(startIndex + j - 1);
+         P(i, j) = x(startIndex + j);
      end
  end
  time1 = (1/fs)*length(P(var, :));
@@ -42,8 +44,9 @@
 sum1 = 0;
 d = zeros(numberFrames, frame_len);
 for l=1:numberFrames
-    sum1=0;
+    
     for k=1:frame_len
+        sum1=0;
         for m = 1:(frame_len - 1 - k)
             sum1 = sum1 + abs(P(l, m) - P(l, m + k));
         end
@@ -74,8 +77,8 @@ end
 
 minimum1=zeros(numberFrames, 1);
 vitri=zeros(numberFrames, 1);
-min = 1000000;
-vitriMin=1000000;
+min = 10000;
+vitriMin=10000;
 for e=1:numberFrames
     min = 10000;
     vitriMin=10000;
@@ -88,7 +91,8 @@ for e=1:numberFrames
     minimum1(e) = min;
     vitri(e) = vitriMin;
 end
-%vitri
+vitri;
+length(vitri)
 minimum1;
 time3 = (1/fs)*length(minimum(var, :));
 t3 = linspace(0, time3, length(minimum(var, :)));
@@ -109,7 +113,9 @@ for i=1:numberFrames
     max1 = max(d(i, :));
     minimum1(i)/max1
     %if minimum1(i) > 3.5
-    if minimum1(i) < (max1 * 0.32)
+    % 0.3 phone-male
+    % 
+    if minimum1(i) < (max1 * 0.3)
        Fo(i) = 1/(vitri(i) / fs);
     end
 end
@@ -146,9 +152,11 @@ for i=1:numberFrames
     end
 end
 fomean/j % trung bình cộng
-sqrt(phuongsai / (j-1)) % độ lệch chuẩn
+sqrt(phuongsai / (j - 1)) % độ lệch chuẩn
 
 
 figure(15);
  plot(t,x);
  fs
+ 
+ %end

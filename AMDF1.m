@@ -1,11 +1,12 @@
- close all;clear;clc
+ %close all;clear;clc
+ function [Fo] =  AMDF1(filename)
  % input audio
- [x,fs]=audioread('./fileTinHieuMoi/studio_F1.wav'); 
+ [x,fs]=audioread('./fileTinHieuMoi/phone_F1.wav');
  figure(1);
- var=32;% khung thứ 
+ var=47;% khung thứ 
  
  % vẽ signal by sample
- subplot(4,2,1);
+ subplot(4,1,1);
  plot(x);
  title('signal speech');
  xlabel('sample number');
@@ -15,7 +16,7 @@
  % vẽ signal by time
  time = (1/fs)*length(x);
  t = linspace(0, time, length(x));
- subplot(4,2,2);
+ subplot(4,1,2);
  plot(t,x);
  title('signal by second');
  xlabel('time(sec)');
@@ -33,15 +34,12 @@
          P(i, j) = x(startIndex + j - 1);
      end
  end
- time1 = (1/fs)*length(P(var, :));
- t1 = linspace(0, time1, length(P(var, :)));
- subplot(4,2,3);
- plot(t1, P(var, :));
 
 % tính AMDF
 sum1 = 0;
 d = zeros(numberFrames, frame_len);
 for l=1:numberFrames
+    sum1=0;
     for k=1:frame_len
         for m = 1:(frame_len - 1 - k)
             sum1 = sum1 + abs(P(l, m) - P(l, m + k));
@@ -50,18 +48,13 @@ for l=1:numberFrames
         sum1=0;
     end
 end
-time2 = (1/fs)*length(d(var, :));
-t2 = linspace(0, time2, length(d(var, :)));
-subplot(4,2,4);
-plot(t2, d(var, :));
 
 normalizedAMDF = d - min(d(:));
 normalizedAMDF = normalizedAMDF ./ max(normalizedAMDF(:));
 
-
 % tìm cực tiểu của khung tín hiệu
-T0_min=fs/450;
-T0_max=fs/70;
+T0_min=fs/400;
+T0_max=fs/80;
 minimum = zeros(numberFrames, frame_len);
 for nf=1:numberFrames
     for r=2:frame_len
@@ -74,55 +67,42 @@ end
 
 minimum1=zeros(numberFrames, 1);
 vitri=zeros(numberFrames, 1);
-min = 1000000;
+min1 = 1000000;
 vitriMin=1000000;
 for e=1:numberFrames
-    min = 1000000;
-    vitriMin=1000000;
-    for r=2:frame_len
-        if minimum(e, r) ~= 0 && min > minimum(e, r)
-            min = minimum(e, r);
+    min1 = 10000;
+    vitriMin=10000;
+    for r=1:frame_len
+        if minimum(e, r) ~= 0 && min1 > minimum(e, r)
+            min1 = minimum(e, r);
             vitriMin = r;
         end
     end
-    minimum1(e) = min;
+    minimum1(e) = min1;
     vitri(e) = vitriMin;
 end
 %vitri
-minimum1
-time3 = (1/fs)*length(minimum(var, :));
-t3 = linspace(0, time3, length(minimum(var, :)));
-subplot(4,2,5);
-stem(t3, minimum(var, :));
 
 % so sánh với ngưỡng
 Fo=zeros(numberFrames, 1);
 for i=1:numberFrames
-    % 570 studio_male
-    % 130 phone_female
-    % 400 studio_fe
-    % 170 phone_male
-    %if vitri(i) < 540
-    % 8.6 male_studi
-    % 9 female_studi
-    if minimum1(i) > 0.1
+    max1 = max(normalizedAMDF(i, :));
+    minimum1(i)/max1;
+
+    if minimum1(i) < (max1 * 0.25)
        Fo(i) = 1/(vitri(i) / fs);
     end
 end
-subplot(4,2,6);
-plot(Fo, '.');
-figure(9);
-plot(Fo, '.');
 k=1;
-figure(10);
+subplot(4,1,3);
 for i=1:numberFrames
     k=k+1;
     if Fo(i) > 0
         hold on
-        
         plot(k-1:k-1, Fo(i), '.' ,'color', 'r');
     end
 end
+xlim([0 length(Fo)]);
 
 
 % tính trung bình cộng Fo
@@ -144,7 +124,5 @@ end
 fomean/j % trung bình cộng
 sqrt(phuongsai / (j-1)) % độ lệch chuẩn
 
-
-figure(15);
- plot(t,x);
- fs
+ 
+ end
