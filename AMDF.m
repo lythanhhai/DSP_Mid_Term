@@ -23,7 +23,6 @@
  xlabel('time(sec)');
  ylabel('amplitude');
  
-
  % phân khung cho tín hiệu
  frame_len = 0.03 * fs;% chiều dài khung, 1 khung 30ms
  R = length(x);
@@ -123,6 +122,7 @@ subplot(4,2,6);
 plot(Fo, '.');
 figure(9);
 plot(Fo, '.');
+xlim([0 length(Fo)]);
 k=1;
 figure(10);
 for i=1:numberFrames

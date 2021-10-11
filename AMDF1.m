@@ -1,12 +1,12 @@
  %close all;clear;clc
- function [Fo] =  AMDF1(filename)
+ function [Fo] =  AMDF1(filename, sofile);
  % input audio
- [x,fs]=audioread('./fileTinHieuMoi/phone_F1.wav');
- figure(1);
+ [x,fs]=audioread(filename);
+ figure(sofile);
  var=47;% khung thứ 
  
  % vẽ signal by sample
- subplot(4,1,1);
+ subplot(3,1,1);
  plot(x);
  title('signal speech');
  xlabel('sample number');
@@ -16,13 +16,12 @@
  % vẽ signal by time
  time = (1/fs)*length(x);
  t = linspace(0, time, length(x));
- subplot(4,1,2);
+ subplot(3,1,2);
  plot(t,x);
  title('signal by second');
  xlabel('time(sec)');
  ylabel('amplitude');
  
-
  % phân khung cho tín hiệu
  frame_len = 0.03 * fs;% chiều dài khung, 1 khung 30ms
  R = length(x);
@@ -35,7 +34,7 @@
      end
  end
 
-% tính AMDF
+% tính AMDF cho từng khung
 sum1 = 0;
 d = zeros(numberFrames, frame_len);
 for l=1:numberFrames
@@ -49,6 +48,7 @@ for l=1:numberFrames
     end
 end
 
+% chuẩn hóa
 normalizedAMDF = d - min(d(:));
 normalizedAMDF = normalizedAMDF ./ max(normalizedAMDF(:));
 
@@ -65,10 +65,11 @@ for nf=1:numberFrames
 end
 %&& r > T0_min && r < T0_max
 
+% tìm min nhỏ nhất của từng khung và vị trí của nó
 minimum1=zeros(numberFrames, 1);
 vitri=zeros(numberFrames, 1);
-min1 = 1000000;
-vitriMin=1000000;
+min1 = 10000;
+vitriMin=10000;
 for e=1:numberFrames
     min1 = 10000;
     vitriMin=10000;
@@ -83,7 +84,7 @@ for e=1:numberFrames
 end
 %vitri
 
-% so sánh với ngưỡng
+% so sánh với ngưỡng để phân biệt vô thanh, hưu thanh, khoảng lặng
 Fo=zeros(numberFrames, 1);
 for i=1:numberFrames
     max1 = max(normalizedAMDF(i, :));
@@ -93,8 +94,10 @@ for i=1:numberFrames
        Fo(i) = 1/(vitri(i) / fs);
     end
 end
+
+% vẽ Fo 
 k=1;
-subplot(4,1,3);
+subplot(3,1,3);
 for i=1:numberFrames
     k=k+1;
     if Fo(i) > 0
@@ -104,8 +107,7 @@ for i=1:numberFrames
 end
 xlim([0 length(Fo)]);
 
-
-% tính trung bình cộng Fo
+% tính trung bình cộng Fo (Fo_mean)
 fomean = 0;
 j =0;
 for i=1:numberFrames
@@ -114,15 +116,16 @@ for i=1:numberFrames
        j = j + 1;
     end
 end
-% tính độ leehcj chuẩn
+
+% tính độ lệch chuẩn (Fo_std)
 phuongsai = 0;
 for i=1:numberFrames
     if Fo(i) ~= 0
         phuongsai = phuongsai + power(Fo(i) - fomean/j, 2);
     end
 end
-fomean/j % trung bình cộng
-sqrt(phuongsai / (j-1)) % độ lệch chuẩn
 
- 
- end
+fomean/j; % trung bình cộng
+sqrt(phuongsai / (j-1)); % độ lệch chuẩn
+
+end
