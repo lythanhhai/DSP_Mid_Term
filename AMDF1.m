@@ -1,8 +1,8 @@
  %close all;clear;clc
- function [Fo] =  AMDF1(filename, sofile, frame_voice, frame_unvoice);
+ function [Fo] =  AMDF1(filename, tenFile, frame_voice, frame_unvoice);
  % input audio
  [x,fs]=audioread(filename);
- figure(sofile);
+ figure('name', tenFile);
  
  % vẽ signal by time
  time = (1/fs)*length(x);
@@ -67,7 +67,7 @@ for nf=1:numberFrames
     maxSignal(nf) = max(normalizedAMDF(nf, :));
 end
 %&& r > T0_min && r < T0_max
-maxSignal
+%maxSignal
 % tìm min nhỏ nhất của từng khung và vị trí của nó
 minimum1=zeros(numberFrames, 1);
 vitri=zeros(numberFrames, 1);
@@ -92,7 +92,7 @@ Fo=zeros(numberFrames, 1);
 for i=1:numberFrames
     max1 = max(normalizedAMDF(i, :));
     minimum1(i)/max1;
-   % 0.3 phone
+   % 0.3
     if minimum1(i) < (max1 * 0.3)
        Fo(i) = 1/(vitri(i) / fs);
     end
