@@ -8,7 +8,7 @@
  % vẽ signal by time
  time = (1/fs)*length(x);
  t = linspace(0, time, length(x));
- subplot(5,1,1);
+ subplot(4,1,1);
  plot(t,x);
  title(['signal ', tenFile]);
  xlabel('time(sec)');
@@ -45,7 +45,7 @@ end
 normalizedAMDF = d / max(d(:));
 
 % vẽ khung voice sau khi được chuẩn hóa
-subplot(5,1,2);
+subplot(4,1,2);
 time1 = (1/fs)*length(normalizedAMDF);
 t1 = linspace(0, time1, length(normalizedAMDF));
 plot(t1, normalizedAMDF(frame_voice, :));
@@ -54,7 +54,7 @@ ylabel('amplititude');
 xlabel('lag(sec)');
 
 % vẽ khung unvoice sau khi chuẩn hóa
-subplot(5,1,3);
+subplot(4,1,3);
 plot(t1, normalizedAMDF(frame_unvoice, :));
 title('unvoice');
 ylabel('amplititude');
@@ -132,7 +132,7 @@ fo_std = sqrt(phuongsai / (j-1));
 
 % vẽ Fo loại bỏ các phần tử bằng 0
 k=1;
-subplot(5,1,4);
+subplot(4,1,4);
 for i=1:numberFrames
     k=k+1;
     if Fo(i) > 0
@@ -185,13 +185,12 @@ for i=1:u-1
     for j=1:(soPhanTu - 1)
         for k=(j+1):soPhanTu
             if khung(i, j) > khung(i, k) 
-                temp = khung(i, j);
                 khung(i, j) = khung(i, k);
-                khung(i, k) = temp;
             end
         end
     end
 end
+
 % gán điểm đang xét cho điểm chính giữa mỗi khung được tách 
 index=1;
 for i=3:numberFrames+2
@@ -209,10 +208,6 @@ for i=1:length(filterFo)
     end
 end
 xlim([0 length(filterFo)]);
-title('Fo sau khi lọc trung vị');
 %length(filterFo)
 %length(Fo)
-%figure(10);
-%plot(khung(38, :));
-
 end
