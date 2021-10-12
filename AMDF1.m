@@ -3,15 +3,6 @@
  % input audio
  [x,fs]=audioread(filename);
  figure(sofile);
- var=47;% khung thứ 
- 
- % vẽ signal by sample
- %subplot(4,1,1);
- %plot(x);
- %title('signal speech');
- %xlabel('sample number');
- %ylabel('amplitude');
- %grid on;
  
  % vẽ signal by time
  time = (1/fs)*length(x);
@@ -66,15 +57,17 @@ title('unvoice');
 T0_min=fs/450;
 T0_max=fs/70;
 minimum = zeros(numberFrames, frame_len);
+maxSignal = zeros(numberFrames, 1);
 for nf=1:numberFrames
     for r=2:frame_len
            if (normalizedAMDF(nf, r) < normalizedAMDF(nf, r-1)) && (normalizedAMDF(nf, r) < normalizedAMDF(nf, r+1)) && r > T0_min && r < T0_max
                minimum(nf, r) = normalizedAMDF(nf, r);
            end   
     end
+    maxSignal(nf) = max(normalizedAMDF(nf, :));
 end
 %&& r > T0_min && r < T0_max
-
+maxSignal
 % tìm min nhỏ nhất của từng khung và vị trí của nó
 minimum1=zeros(numberFrames, 1);
 vitri=zeros(numberFrames, 1);
@@ -93,7 +86,7 @@ for e=1:numberFrames
     vitri(e) = vitriMin;
 end
 %vitri
-
+%minimum1
 % so sánh với ngưỡng để phân biệt vô thanh, hưu thanh, khoảng lặng
 Fo=zeros(numberFrames, 1);
 for i=1:numberFrames
