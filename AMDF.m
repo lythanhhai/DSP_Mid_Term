@@ -1,7 +1,7 @@
  close all;clear;clc
  % function [Fo] = AMDF(filename)
  % input audio
- [x,fs]=audioread('./fileTinHieuMoi/phone_F1.wav'); 
+ [x,fs]=audioread('./fileTinHieuMoi/studio_F1.wav'); 
 % [x,fs]=audioread(filename); 
  figure(1);
  var=105;% khung thứ 
@@ -157,6 +157,6 @@ sqrt(phuongsai / (j - 1)) % độ lệch chuẩn
 
 figure(15);
  plot(t,x);
- fs
+
  
  %end
