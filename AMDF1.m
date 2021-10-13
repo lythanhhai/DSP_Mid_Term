@@ -60,7 +60,7 @@ title('unvoice');
 ylabel('amplititude');
 xlabel('lag(sec)');
 
-% tìm cực tiểu của khung tín hiệu(con người có tần số thuộc khoảng 70-450)
+% tìm cực tiểu của khung tín hiệu(con người có tần số thuộc khoảng 70-450Hz)
 T0_min=fs/450;
 T0_max=fs/70;
 minimum = zeros(numberFrames, frame_len);% lưu các cực tiểu cục bộ trong 1 khung 
@@ -210,6 +210,8 @@ for i=1:length(filterFo)
 end
 xlim([0 length(filterFo)]);
 title('Fo sau khi lọc trung vị');
+xlabel('khung');
+ylabel('Fo(Hz)');
 %length(filterFo)
 %length(Fo)
 %figure(10);
