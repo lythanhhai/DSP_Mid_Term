@@ -5,16 +5,6 @@
  [x,fs]=audioread(filename);
  figure('name', tenFile);
  
- % vẽ signal by time
- time = (1/fs)*length(x);
- t = linspace(0, time, length(x));
- subplot(5,1,1);
- plot(t,x);
- title(['signal ', tenFile]);
- xlabel('time(sec)');
- ylabel('amplitude');
- grid on
- 
  % phân khung cho tín hiệu
  frame_len = 0.03 * fs;% chiều dài khung, 1 khung 30ms
  R = length(x);
@@ -42,23 +32,9 @@ for l=1:numberFrames
 end
 
 % chuẩn hóa
+
 normalizedAMDF = d / max(d(:));
 
-% vẽ khung voice sau khi được chuẩn hóa
-subplot(5,1,2);
-time1 = (1/fs)*length(normalizedAMDF);
-t1 = linspace(0, time1, length(normalizedAMDF));
-plot(t1, normalizedAMDF(frame_voice, :));
-title('voice');
-ylabel('amplititude');
-xlabel('lag(sec)');
-
-% vẽ khung unvoice sau khi chuẩn hóa
-subplot(5,1,3);
-plot(t1, normalizedAMDF(frame_unvoice, :));
-title('unvoice');
-ylabel('amplititude');
-xlabel('lag(sec)');
 
 % tìm cực tiểu của khung tín hiệu(con người có tần số thuộc khoảng 70-450Hz)
 T0_min=fs/450;
@@ -101,7 +77,7 @@ Fo=zeros(numberFrames, 1);
 for i=1:numberFrames
     max1 = max(normalizedAMDF(i, :));
     minimum1(i)/max1;
-    % 0.3
+    % 0.3()
     if minimum1(i) < (max1 * 0.3)
        Fo(i) = 1 / (vitri(i) / fs);
     end
@@ -130,20 +106,6 @@ fo_mean = fomean/j;
 % độ lệch chuẩn
 fo_std = sqrt(phuongsai / (j-1));
 
-% vẽ Fo loại bỏ các phần tử bằng 0
-k=1;
-subplot(5,1,4);
-for i=1:numberFrames
-    k=k+1;
-    if Fo(i) > 0
-        hold on
-        plot(k-1, Fo(i), '.' ,'color', 'b');
-    end
-end
-xlim([0 length(Fo)]);
-title(['Fomean = ', num2str(fo_mean), 'Hz ', ' Fostd = ', num2str(fo_std), 'Hz']);
-xlabel('khung');
-ylabel('Fo(hz)');
 
 % lọc trung vị
 soPhanTu = 5;
@@ -192,6 +154,7 @@ for i=1:u-1
         end
     end
 end
+
 % gán điểm đang xét cho điểm chính giữa mỗi khung được tách 
 index=1;
 for i=3:numberFrames+2
@@ -199,6 +162,73 @@ for i=3:numberFrames+2
     index = index + 1;
 end
 
+% tính trung bình cộng Fo sau khi lọc trung vị (Fo_mean_median)
+fomean_median = 0;
+j =0;
+for i=1:(numberFrames + 4)
+    if filterFo(i) ~= 0
+       fomean_median = fomean_median + filterFo(i);
+       j = j + 1;
+    end
+end
+
+% tính độ lệch chuẩn (Fo_std)
+phuongsai_median = 0;
+for i=1:(numberFrames + 4)
+    if filterFo(i) ~= 0
+        phuongsai_median = phuongsai_median + power(filterFo(i) - fomean_median/j, 2);
+    end
+end
+
+% trung bình cộng
+fo_mean_median = fomean_median/j; 
+% độ lệch chuẩn
+fo_std_median = sqrt(phuongsai_median / (j-1));
+
+
+% vẽ
+ % vẽ signal by time
+ time = (1/fs)*length(x);
+ t = linspace(0, time, length(x));
+ subplot(5,1,1);
+ plot(t,x);
+ title(['signal ', tenFile]);
+ xlabel('time(sec)');
+ ylabel('amplitude');
+ grid on
+ 
+ % vẽ khung voice sau khi được chuẩn hóa
+subplot(5,1,2);
+time1 = (1/fs)*length(normalizedAMDF);
+t1 = linspace(0, time1, length(normalizedAMDF));
+plot(t1, normalizedAMDF(frame_voice, :));
+title(['frame voice có F0 = ', num2str(filterFo(frame_voice))]);
+ylabel('amplititude');
+xlabel('lag(sec)');
+
+% vẽ khung unvoice sau khi chuẩn hóa
+subplot(5,1,3);
+plot(t1, normalizedAMDF(frame_unvoice, :));
+title(['frame unvoice']);
+ylabel('amplititude');
+xlabel('lag(sec)');
+
+% vẽ Fo loại bỏ các phần tử bằng 0
+k=1;
+subplot(5,1,4);
+for i=1:numberFrames
+    k=k+1;
+    if Fo(i) > 0
+        hold on
+        plot(k-1, Fo(i), '.' ,'color', 'b');
+    end
+end
+xlim([0 length(Fo)]);
+title(['Fo chưa lọc: ', 'Fomean = ', num2str(fo_mean), 'Hz ', ' Fostd = ', num2str(fo_std), 'Hz']);
+xlabel('khung');
+ylabel('Fo(hz)');
+
+% vẽ filterFo
 a=1;
 subplot(5,1,5);
 for i=1:length(filterFo)
@@ -209,7 +239,7 @@ for i=1:length(filterFo)
     end
 end
 xlim([0 length(filterFo)]);
-title('Fo sau khi lọc trung vị');
+title(['Fo sau khi lọc trung vị: ', 'Fomean = ', num2str(fo_mean_median), 'Hz ', ' Fostd = ', num2str(fo_std_median), 'Hz']);
 xlabel('khung');
 ylabel('Fo(Hz)');
 %length(filterFo)
