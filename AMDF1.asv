@@ -78,7 +78,7 @@ for i=1:numberFrames
     max1 = max(normalizedAMDF(i, :));
     %minimum1(i)/max1;
     % 0.3()
-    if minimum1(i) < (max1 * 0.32)
+    if minimum1(i) < (max1 * 0.3)
        Fo(i) = 1 / (vitri(i) / fs);
     end
 end
@@ -212,14 +212,13 @@ end
 stem(t3, Fo,'.', 'fill');
 %xlim([0 length(Fo)]);
 title(['Fo chưa lọc: ', 'Fomean = ', num2str(fo_mean), 'Hz ', ' Fostd = ', num2str(fo_std), 'Hz']);
-xlabel('time(sec)');
+xlabel('khung');
 ylabel('Fo(hz)');
 
 % vẽ filterFo
-index1=1;
-for i=3:(numberFrames + 2)
-    filterFoCopy(index1) = filterFo(i);
-    index1 = index1 + 1;
+b=1;
+for i=3:numberFrames + 2(length(filterFo) -2)
+    filterFoCopy(b) = filterFo(i);
 end
 a=1;
 time2 = 0.03 * length(filterFoCopy);
@@ -235,7 +234,7 @@ end
 stem(t2, filterFoCopy, '.', 'fill');
 %xlim([0 length(filterFo)]);
 title(['Fo sau khi lọc trung vị: ', 'Fomean = ', num2str(fo_mean_median), 'Hz ', ' Fostd = ', num2str(fo_std_median), 'Hz']);
-xlabel('time(sec)');
+xlabel('khung');
 ylabel('Fo(Hz)');
  
  % vẽ khung voice sau khi được chuẩn hóa
