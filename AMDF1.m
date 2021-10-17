@@ -81,7 +81,7 @@ for i=1:numberFrames
     max1 = max(normalizedAMDF(i, :));
     %minimum1(i)/max1;
     % 0.3()
-    if minimum1(i) < (max1 * 0.325)
+    if minimum1(i) < (max1 * 0.32)
        Fo(i) = 1 / (vitri(i) / fs);
     end
 end
@@ -213,7 +213,7 @@ for i=1:numberFrames
         %plot(k-1, Fo(i), '.', 'color', 'b');
     end
 end
-stem(t3, Fo,'.', 'fill');
+plot(t3, Fo,'.');
 %xlim([0 length(Fo)]);
 title(['Fo chưa lọc: ', 'Fomean = ', num2str(fo_mean), 'Hz ', ' Fostd = ', num2str(fo_std), 'Hz']);
 xlabel('time(sec)');
@@ -236,7 +236,7 @@ for i=1:length(filterFo)
         %plot(a-1, filterFo(i), '.' ,'color', 'b');
     end
 end
-stem(t2, filterFoCopy, '.', 'fill');
+plot(t2, filterFoCopy, '.');
 %xlim([0 length(filterFo)]);
 title(['Fo sau khi lọc trung vị: ', 'Fomean = ', num2str(fo_mean_median), 'Hz ', ' Fostd = ', num2str(fo_std_median), 'Hz']);
 xlabel('time(sec)');
