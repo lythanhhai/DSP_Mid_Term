@@ -72,16 +72,20 @@ end
 %vitri
 %minimum1
 
+% tính meanV, stdV
+
+
 % so sánh với ngưỡng để phân biệt vô thanh, hữu thanh, khoảng lặng
 Fo=zeros(numberFrames, 1);
 for i=1:numberFrames
     max1 = max(normalizedAMDF(i, :));
     %minimum1(i)/max1;
     % 0.3()
-    if minimum1(i) < (max1 * 0.32)
+    if minimum1(i) < (max1 * 0.325)
        Fo(i) = 1 / (vitri(i) / fs);
     end
 end
+
 
 % tính trung bình cộng Fo (Fo_mean)
 fomean = 0;
