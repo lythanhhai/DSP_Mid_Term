@@ -32,8 +32,8 @@ for l=1:numberFrames
 end
 
 % chuẩn hóa
-
-normalizedAMDF = d / max(d(:));
+max123=max(d(:));
+normalizedAMDF = d / max123;
 
 
 % tìm cực tiểu của khung tín hiệu(con người có tần số thuộc khoảng 70-450Hz)
@@ -81,7 +81,7 @@ for i=1:numberFrames
     max1 = max(normalizedAMDF(i, :));
     %minimum1(i)/max1;
     % 0.3()
-    if minimum1(i) < (max1 * 0.32)
+    if minimum1(i) < (max1 * 0.33)
        Fo(i) = 1 / (vitri(i) / fs);
     end
 end
