@@ -81,7 +81,8 @@ for i=1:numberFrames
     max1 = max(normalizedAMDF(i, :));
     %minimum1(i)/max1;
     % 0.3()
-    if minimum1(i) < (max1 * 0.33)
+    if minimum1(i) <= (max1 * 0.33)
+    %if minimum1(i) > 0.05
        Fo(i) = 1 / (vitri(i) / fs);
     end
 end
