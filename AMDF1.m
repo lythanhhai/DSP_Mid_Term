@@ -35,6 +35,11 @@ end
 max123=max(d(:));
 normalizedAMDF = d / max123;
 
+%for l=1:numberFrames
+%    for k=1:frame_len
+%        normalizedAMDF(l, k) = d(l, k) / max(d(l, :));
+%    end
+%end
 
 % tìm cực tiểu của khung tín hiệu(con người có tần số thuộc khoảng 70-450Hz)
 T0_min=fs/450;
