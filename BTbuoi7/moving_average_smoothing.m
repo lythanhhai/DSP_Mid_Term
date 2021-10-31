@@ -48,24 +48,33 @@ title('3-points smoothed y1[n] vs. original signal s[n]');
 h = 1/3 * ones(1,3);    % h[n] = [1/3, 1/3, 1/3]
 y2 = conv(x1, h);         % y2[n] = x1[n] * h[n]
 % ve do thi y2[n] vs. s[n]
-figure(2);
+subplot(3,2,4)
 plot(n,y2(1:L),'r-',n,s(1:L),'b-');
 xlabel('Chi so thoi gian n');
 ylabel('Bien do');
 legend('y2[n]','s[n]');
 title('3-points smoothed y2[n] vs. original signal s[n]');
 
-% ve do thi xep chong y1[n] va y2[n] de test
-figure(3);
-hold on
-plot(n,y1,'r-',n,y2(1:L),'b-');
+% cach 3: dung vong lap for tinh PTSP
+
+data = [0 x 0];
+for i=1:L
+    y3(i) = 1/3 * (data(i) + data(i+1) + data(i+2));
+end
+
+subplot(3,2,5)
+plot(n,y3(1:L),'r-',n,s(1:L),'b-');
 xlabel('Chi so thoi gian n');
 ylabel('Bien do');
-legend('y1[n]','y2[n]');
-title('cach1  vs. cach2');
+legend('y3[n]','s[n]');
+title('3-points smoothed y3[n] vs. original signal s[n]');
 
-% cach 3: dung ham cai dat bo loc filter()???
-
-
-
+% ve chong 3 cach de test do giong nhau
+figure(2);
+hold on
+plot(n,y1,'r-',n,y2(1:L),'b-', n, y3(1:L), 'g-');
+xlabel('Chi so thoi gian n');
+ylabel('Bien do');
+legend('y1[n]','y2[n]', 'y3[n]');
+title('cach1  vs. cach2 vs. cach3');
 
